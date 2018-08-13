@@ -20,4 +20,5 @@ all:
 	cp scripts/omb-config.sh /usr/lib/cgi-bin/	
 	chown www-data /usr/lib/cgi-bin/*.cgi
 	chmod +x /usr/lib/cgi-bin/*
+	cp -r lib/ /var/www/
 

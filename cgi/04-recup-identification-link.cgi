@@ -127,7 +127,7 @@ fi
 /usr/bin/touch /etc/omb/Identification-configured
 
 cat <<EOF
-<meta http-equiv="refresh" content="0; url=../first/05-choose-domain.html">
+<meta http-equiv="refresh" content="0; url=05-choose-domain.cgi">
 </head><body></body>
 </html>
 EOF

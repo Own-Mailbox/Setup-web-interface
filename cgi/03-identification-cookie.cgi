@@ -1,10 +1,8 @@
 #!/bin/bash
-
 echo -e "Content-Type: text/html\n\n"
 echo -e ""
 
-                     
-tpl_domain=$(cat /home/www-data/domain);
+. /usr/lib/cgi-bin/omb-config.sh
 
 #####################################################################
 #
@@ -22,10 +20,10 @@ page=$(cat /var/www/first/header.html)
 page=$( inject_var "$page" ~tpl_active_welcome "")
 page=$( inject_var "$page" ~tpl_active_password "")
 page=$( inject_var "$page" ~tpl_active_connectivity "")
-page=$( inject_var "$page" ~tpl_active_identification_link "")
+page=$( inject_var "$page" ~tpl_active_identification_link "active")
 page=$( inject_var "$page" ~tpl_active_domain "")
 page=$( inject_var "$page" ~tpl_active_summary "")
-page=$( inject_var "$page" ~tpl_active_email_account "active")
+page=$( inject_var "$page" ~tpl_active_email_account "")
 page=$( inject_var "$page" ~tpl_active_keys "")
 page=$( inject_var "$page" ~tpl_active_done "")
 echo $page;
@@ -33,14 +31,12 @@ echo $page;
 ########################################################
 #			page
 ########################################################
-page=$(cat /var/www/first/08-setup-email-acount.html)
-page=$( inject_var "$page" ~tpl_domain "$tpl_domain")
+page=$(cat /var/www/first/03-identification-cookie.html)
+page=$( inject_var "$page" ~tpl_FQDN "$FQDN")
 echo $page;
-
 
 ########################################################
 #			Footer
 ########################################################
 page=$(cat /var/www/first/footer.html)
-echo $page;
- 
+echo $page; 
