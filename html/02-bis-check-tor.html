@@ -1,3 +1,4 @@
+<meta http-equiv="refresh" content="~tpl_redirect">
     <script>
         function toggle_logs() {
             var div = document.getElementById("toggle-logs");
@@ -8,46 +9,82 @@
             }
         }
     </script>
-</head>
-<body>
-<img src="../first/files/images/logo.png" alt="Own-Mailbox Logo">
-<div class="box">
-    <p class="title">
-        Connecting to<br>the tor network
-    </p>
-    <div class="content">
-        <span>Please wait...</span>
-        <ul class="loader">
-            <li>
-                <div class="circle"></div>
-                <div class="ball"></div>
-            </li>
-            <li>
-                <div class="circle"></div>
-                <div class="ball"></div>
-            </li>
-            <li>
-                <div class="circle"></div>
-                <div class="ball"></div>
-            </li>
-            <li>
-                <div class="circle"></div>
-                <div class="ball"></div>
-            </li>
-            <li>
-                <div class="circle"></div>
-                <div class="ball"></div>
-            </li>
-        </ul>
-        <div>
-            <label class="note bottom link" for="toggle-logs" onclick="toggle_logs();">
+    
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+    
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+        </section>
+        
+        <section class="content">
+        
+        
+        
+<div class="col-lg-12 col-md-12 col-xs-12">
+<div class="box  box-success" style="display:block">
+<div class="box-header">
+<i class="fa fa-exchange"></i>
+    <h3 class="box-title">
+        Checking connectivity
+    </h3>
+                </div>
+
+        <div class="box-body chat" id="chat-box">
+          <div class="alert alert-info alert-dismissible">
+           <i class="fa fa-rotate-right fa-spin"></i> <b>Please wait while establishing connection to the tor network, and the proxy server!</b><br> You will be automatically redirected to next step when check is over.
+          </div>  
+        <div class="row">
+                <div class="col-lg-4 col-md-6 col-xs-12">
+                        <div class="info-box bg-~tpl_torproxy_color">
+                        <span class="info-box-icon"><i class="fa fa-user-secret"></i></span>
+
+                        <div class="info-box-content">
+                        <span class="align-middle" ><center>Connection to tor</center></span>
+                        </div>
+                        <!-- /.info-box-content -->
+                        </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6 col-xs-12">
+                        <div class="info-box bg-~tpl_torproxy_color">
+                        <span class="info-box-icon"><i class="fa fa-server"></i></span>
+
+                        <div class="info-box-content">
+                        <span class="align-middle" ><center>Connection to the proxy server</center></span>
+                        </div>
+                        <!-- /.info-box-content -->
+                        </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6 col-xs-12">
+                        <div class="info-box bg-~tpl_hidden_color">
+                        <span class="info-box-icon"><i class="fa fa-upload"></i></span>
+
+                        <div class="info-box-content">
+                        <span class="align-middle" ><center>Hidden service accessibilty</center></span>
+                        </div>
+                        <!-- /.info-box-content -->
+                        </div>
+                </div>                
+        
+        </div>    
+                    
+    <br>
+
+            <a href="03-identification-cookie.cgi" class="btn btn-warning">Skip check</a> 
+            <label class="btn btn-info" for="toggle-logs" onclick="toggle_logs();">
                 &#10140; Connection logs.
-            </label>
-            <textarea class="logs" id="toggle-logs" style="display: none;">'
-	      ~tpl_torlog
+            </label><br><br>
+            <textarea class="logs" cols="100" id="toggle-logs" style="display: none;">
+            ~tpl_torlog
             </textarea>
+              
         </div>
-    </div>
+
 </div>
-</body>
-</html> 
+</div>
+</section>
+    
+</div>  
+    

@@ -11,7 +11,7 @@ attempt=$(cat /tmp/attempt_www)
 if [ "$attempt" = "" ]; then
     attempt="1";
     echo "$attempt"> /tmp/attempt_www
-     printf '<meta http-equiv="refresh" content="0">'
+    tpl_redirect="0";
 else
     attempt=$((attempt+1))
     echo "$attempt"> /tmp/attempt_www
@@ -28,14 +28,68 @@ else
     torsocks wget --timeout=$((attempt)) http://$hostname/OK -O /tmp/wget-ok-init >/tmp/wget-tor-init-res 2>&1
     local_ok=$(cat /tmp/wget-ok-init)
 
-    #Si toutes les phase de connection se sont bien passées.
-    if [ "$res_wget" -eq "0" ] && [ "$res_cat" -eq "0" ] && [ "$hostname" != "" ] && [ "$local_ok" = "OK" ]; then
-        printf '<meta http-equiv="refresh" content="0; url=03-identification-cookie.cgi">'
+    if [ "$res_wget" -eq "0" ]; then
+        tpl_torproxy_color="green"
     else
-        printf '<meta http-equiv="refresh" content="'
-        printf "1"
-        printf '">'
+        tpl_torproxy_color="orange"
     fi
+    
+    if  [ "$res_cat" -eq "0" ] && [ "$hostname" != "" ] && [ "$local_ok" = "OK" ]; then
+        tpl_hidden_color="green"
+    else
+        tpl_hidden_color="orange"
+    fi
+    
+    #Si toutes les phase de connection se sont bien passées.
+     if [ "$res_wget" -eq "0" ] && [ "$res_cat" -eq "0" ] && [ "$hostname" != "" ] && [ "$local_ok" = "OK" ]; then
+         tpl_redirect="4; url=03-identification-cookie.cgi"
+     else
+         tpl_redirect="1";
+     fi
 fi
+
+tpl_torlog=$(cat /var/log/tor.log)
+tpl_torlog=${tpl_torlog//$'\n'/\\\&\\\#010;}
+
+#####################################################################
+#
+#               Generation du html   
+#
+#####################################################################
+inject_var() {
+	echo $1 | sed -e "s#$2#$3#g"
+}
+
+########################################################
+#			Header
+########################################################
+page=$(cat /var/www/first/header.html)
+page=$( inject_var "$page" ~tpl_active_welcome "")
+page=$( inject_var "$page" ~tpl_active_password "")
+page=$( inject_var "$page" ~tpl_active_connectivity "active")
+page=$( inject_var "$page" ~tpl_active_identification_link "")
+page=$( inject_var "$page" ~tpl_active_domain "")
+page=$( inject_var "$page" ~tpl_active_summary "")
+page=$( inject_var "$page" ~tpl_active_email_account "")
+page=$( inject_var "$page" ~tpl_active_keys "")
+page=$( inject_var "$page" ~tpl_active_done "")
+echo $page;
+
+########################################################
+#			page
+########################################################
+page=$(cat /var/www/first/02-bis-check-tor.html)
+page=$( inject_var "$page" ~tpl_torlog "$tpl_torlog")
+page=$( inject_var "$page" ~tpl_torproxy_color "$tpl_torproxy_color")
+page=$( inject_var "$page" ~tpl_hidden_color  "$tpl_hidden_color" )
+page=$( inject_var "$page" ~tpl_redirect  "$tpl_redirect" )
+echo $page;
+
+########################################################
+#			Footer
+########################################################
+page=$(cat /var/www/first/footer.html)
+echo $page;
+ 
 
 
