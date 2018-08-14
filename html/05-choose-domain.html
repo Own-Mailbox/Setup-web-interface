@@ -19,16 +19,32 @@
         Choose your domain</h3>
                 </div>
 
+                
         <div class="box-body chat" id="chat-box">
+        <div class="row">
+        <div class="col-lg-6 col-md-6 col-xs-12">
         <form action="../cgi-bin/06-recup-domain.cgi" method="post">
             <p><label>Domain:<br><input type="text" style="width: 70%;" name="domain">.~tpl_MASTER_DOMAIN</label></p>
             <p class="buttons">
                 <input type="submit"  class="btn btn-success" value="Submit">
             </p>
         </form>
-        <div class="note bottom">Your email addresses will end with this domain.</div>
-    </div>
+        </div>
 
+        
+        <div class="col-lg-6 col-md-6 col-xs-12">
+<!--              <div class="alert alert-info alert-dismissible">This password will be used to connect to your Own-Mailbox via ssh<br>and to access the administration panel.</div>-->
+                                      <div class="info-box bg-aqua">
+                        <span class="info-box-icon"><i class="fa fa-info"></i></span>
+
+                        <div class="info-box-content">
+                        <span class="align-middle" ><center><b>Your email addresses will end with this domain.</b><br> For example if you <b>choose the domain doe.~tpl_MASTER_DOMAIN</b> you will be able to have the email address <b>john@doe.~tpl_MASTER_DOMAIN</b></center></span>
+                        </div>
+                        <!-- /.info-box-content -->
+                        </div>
+        </div>
+        </div>
+    </div>
             </section>
     
     </div>  

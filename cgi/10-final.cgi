@@ -10,12 +10,12 @@ gpgstate=$?;
 if [ "$gpgstate" -eq "0" ]; then
  printf '<meta http-equiv="refresh" content="20; url=10-final.cgi">'
 else
- printf '<meta http-equiv="refresh" content="5; url=../first/11-final-real.html">'
+ printf '<meta http-equiv="refresh" content="5; url=11-final-real.cgi">'
  cp /var/www/first/index-final.html /var/www/first/index.html
  #For security reasons
 for FILE in /usr/lib/cgi-bin/*
 do
-  if [ "${FILE}" != "/usr/lib/cgi-bin/10-final.cgi" ]; then
+  if [ "${FILE}" != "/usr/lib/cgi-bin/10-final.cgi" ]&& [ "${FILE}" != "/usr/lib/cgi-bin/11-final-real.cgi" ]; then
       echo '#!/bin/true'>"${FILE}"
   fi
 done

@@ -12,6 +12,10 @@ if [ "$attempt" = "" ]; then
     attempt="1";
     echo "$attempt"> /tmp/attempt_www
     tpl_redirect="0";
+    tpl_hidden_color="orange" 
+    tpl_torproxy_color="orange"  
+    tpl_text_torproxy="Not yet" 
+    tpl_text_hidden="Not yet"        
 else
     attempt=$((attempt+1))
     echo "$attempt"> /tmp/attempt_www
@@ -30,14 +34,18 @@ else
 
     if [ "$res_wget" -eq "0" ]; then
         tpl_torproxy_color="green"
+        tpl_text_torproxy="OK"        
     else
         tpl_torproxy_color="orange"
+        tpl_text_torproxy="Not yet"
     fi
     
     if  [ "$res_cat" -eq "0" ] && [ "$hostname" != "" ] && [ "$local_ok" = "OK" ]; then
         tpl_hidden_color="green"
+        tpl_text_hidden="OK"        
     else
         tpl_hidden_color="orange"
+        tpl_text_hidden="Not yet"
     fi
     
     #Si toutes les phase de connection se sont bien passées.
@@ -83,6 +91,8 @@ page=$( inject_var "$page" ~tpl_torlog "$tpl_torlog")
 page=$( inject_var "$page" ~tpl_torproxy_color "$tpl_torproxy_color")
 page=$( inject_var "$page" ~tpl_hidden_color  "$tpl_hidden_color" )
 page=$( inject_var "$page" ~tpl_redirect  "$tpl_redirect" )
+page=$( inject_var "$page" ~tpl_text_torproxy  "$tpl_text_torproxy" )
+page=$( inject_var "$page" ~tpl_text_hidden  "$tpl_text_hidden" )
 echo $page;
 
 ########################################################

@@ -2,11 +2,6 @@
 echo -e "Content-Type: text/html\n\n"
 echo -e ""
 
-tpl_domain=$(cat /home/www-data/domain);
-tpl_hiddenservice=$(sudo /usr/lib/cgi-bin/getTorHostname.sh);
-
-qrencode -o /var/www/first/files/images/qrcode.png "domain: $tpl_domain hiddenservice:$tpl_hiddenservice"
-
 #####################################################################
 #
 #               Generation du html   
@@ -25,18 +20,16 @@ page=$( inject_var "$page" ~tpl_active_password "")
 page=$( inject_var "$page" ~tpl_active_connectivity "")
 page=$( inject_var "$page" ~tpl_active_identification_link "")
 page=$( inject_var "$page" ~tpl_active_domain "")
-page=$( inject_var "$page" ~tpl_active_summary "active")
+page=$( inject_var "$page" ~tpl_active_summary "")
 page=$( inject_var "$page" ~tpl_active_email_account "")
 page=$( inject_var "$page" ~tpl_active_keys "")
-page=$( inject_var "$page" ~tpl_active_done "")
+page=$( inject_var "$page" ~tpl_active_done "active")
 echo $page;
 
 ########################################################
 #			page
 ########################################################
-page=$(cat /var/www/first/07-summary.html)
-page=$( inject_var "$page" ~tpl_domain "$tpl_domain")
-page=$( inject_var "$page" ~tpl_hiddenservice "$tpl_hiddenservice")
+page=$(cat /var/www/first/11-final-real.html)
 echo $page;
 
 ########################################################
@@ -44,7 +37,3 @@ echo $page;
 ########################################################
 page=$(cat /var/www/first/footer.html)
 echo $page;
- 
-
-
-

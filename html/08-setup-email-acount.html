@@ -20,26 +20,25 @@
             <form name="myForm"  onsubmit="return validateForm()" action="../cgi-bin/09-setup-mailpile.cgi" method="post">
                 <table>
                     <tr>
-                        <td style="width: 25%%;">Email:</td>
-                        <td><input type="text" name="user"></td>
-                        <td>@
-                        ~tpl_domain
+                        <td style="width: 25%%;"><b>Email:</b></td>
+                        <td><input type="text" name="user"  placeholder="Example: john"></td>
+                        <td><b>@~tpl_domain</b>
                         </td>
                     </tr>
                     <tr>
-                        <td>Full name:</td>
-                        <td colspan="2"><input type="text" name="fn"></td>
+                        <td><b>Full name:</b></td>
+                        <td colspan="2"><input type="text" placeholder="Example:John Doe" name="fn"></td>
                     </tr>
                     <tr>
-                        <td>Password:</td>
-                        <td colspan="2"><input type="password" name="pass1"></td>
+                        <td><b>Password:</b></td>
+                        <td colspan="2"><input type="password" name="pass1"  placeholder="At least 8 characters"></td>
                     </tr>
                     <tr>
-                        <td>Confirm:</td>
-                        <td colspan="2"><input type="password" name="pass2"></td>
+                        <td><b>Password(2):</b></td>
+                        <td colspan="2"><input type="password" name="pass2"  placeholder="At least 8 characters"></td>
                     </tr>
                 </table>
-
+                    <br>
                 <p class="buttons">
                     <input type="submit" class="btn btn-success" value="Submit">
                 </p>

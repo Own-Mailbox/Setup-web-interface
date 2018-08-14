@@ -19,23 +19,40 @@
                 </div>
 
         <div class="box-body chat" id="chat-box">
+        <div class="row">
+        <div class="col-lg-6 col-md-6 col-xs-12">        
         <p>
             <span><b>Your domain:</b></span><br>
             <span class="success">
-	      ~tpl_domain
+	      <p style="color:green"><b>~tpl_domain</b></p>
             </span>
         </p>
         <p>
             <span><b>Your tor hidden service address:</b></span><br>
             <span class="success">
-	      ~tpl_hiddenservice
+	      <p style="color:green"><b>~tpl_hiddenservice</b></p>
             </span>
         </p>
-        <p class="warn small">Please save this information carefully. It may be useful later.</p>
-            <a href="08-setup-email-acount.cgi" class="btn btn-success">Continue</a>
-    </div>
-</div>
+        <img src="../first/files/images/qrcode.png"  /><br>
+         <center> <a href="08-setup-email-acount.cgi" class="btn btn-success">Continue</a></center><br>
+        </div>
 
+        
+        <div class="col-lg-6 col-md-6 col-xs-12">
+<!--              <div class="alert alert-info alert-dismissible">This password will be used to connect to your Own-Mailbox via ssh<br>and to access the administration panel.</div>-->
+                                      <div class="info-box bg-orange">
+                        <span class="info-box-icon"><i class="fa fa-info"></i></span>
+
+                        <div class="info-box-content">
+                        <span class="align-middle" ><center>        
+       <b>Please save this information carefully. It may be useful later.</b>
+          </center></span>
+                        </div>
+                        <!-- /.info-box-content -->
+                        </div>
+        </div>
+        </div>
+    </div>
 
             </section>
     
