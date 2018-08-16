@@ -13,6 +13,7 @@ do
   
   cat /var/log/certbot-log | grep "Too many" >/dev/null
   if [ "$?" -eq "0" ]; then
+    echo "Failed" > /tmp/certbot-res
    exit 55;
   fi
   
@@ -28,6 +29,7 @@ if [ -e /etc/letsencrypt/live/$2/fullchain.pem ] && [ -e /etc/letsencrypt/live/$
   ln -s /etc/letsencrypt/live/$2/privkey.pem /etc/ssl/server.key
   service apache2 reload >/dev/null 2>&1;
   (crontab -l 2>/dev/null; echo "12 00 15 * * torsocks certbot renew --quiet && service apache2 reload") | crontab -
+  echo "OK" > /tmp/certbot-res
 fi
 
 

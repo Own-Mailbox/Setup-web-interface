@@ -1,39 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>Own-Mailbox setup.</title>
-    <meta name="Robots" content="noindex,nofollow">
-    <meta http-equiv="X-UA-Compatible" content="IE=EDGE">
-    <meta name="viewport" content="" id="viewport">
-    <link rel="stylesheet" type="text/css" href="../first/files/style.css">
-    <meta http-equiv="content-type" content="text/html; charset=UTF-8">'
-    
+<meta http-equiv="refresh" content="~tpl_redirect">
     <script>
-        /*
-         @licstart  The following is the entire license notice for the
-         JavaScript code in this page.
-
-         Copyright (C) 2015 Pierre Parent.
-
-         The JavaScript code in this page is free software: you can
-         redistribute it and/or modify it under the terms of the GNU
-         General Public License (GNU GPL) as published by the Free Software
-         Foundation, either version 3 of the License, or (at your option)
-         any later version.  The code is distributed WITHOUT ANY WARRANTY;
-         without even the implied warranty of MERCHANTABILITY or FITNESS
-         FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
-
-         As additional permission under GNU GPL version 3 section 7, you
-         may distribute non-source (e.g., minimized or compacted) forms of
-         that code without the copy of the GNU GPL normally required by
-         section 4, provided you include this license notice and a URL
-         through which recipients can access the Corresponding Source.
-
-
-         @licend  The above is the entire license notice
-         for the JavaScript code in this page.
-         */
-
         function toggle_logs() {
             var div = document.getElementById("toggle-logs");
             if (div.style.display !== "none") {
@@ -43,54 +9,77 @@
             }
         }
     </script>
-</head>
-<body>
-<img src="../first/files/images/logo.png" alt="Own-Mailbox Logo">
-<div class="box box-big">
-    <p class="title">
-        Congratulations!
-    </p>
-    <div class="content">
-        <p class="success big">Your webmail is ready!</p>
-        <p>Your encryption key still is still being generated.</p>
-        <p>You can start using your webmail before your encryption key is available.</p>
+
+    
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+    
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+        </section>
+        
+        <section class="content">
+        
+        
+        
+<div class="col-lg-12 col-md-12 col-xs-12">
+<div class="box  box-success" style="display:block">
+                <div class="box-header">
+                <i class="fa fa-lock"></i>
+
+                <h3 class="box-title">
+        Generating encryption key!
+   </h3>
+                </div>
+        <div class="box-body chat" id="chat-box">
+        <p class="success big"><b>Your webmail is ready! Your encryption key still is still being generated.</b></p>
+        
+  <div class="row">
+                <div class="col-lg-4 col-md-6 col-xs-12">
+                        <div class="info-box bg-green">
+                        <span class="info-box-icon"><img src="../first/files/images/https.png" height="60px" /></span>
+
+                        <div class="info-box-content">
+                        <span class="align-middle" ><center><b>Https key</b><h3>OK</h3></center></span>
+                        </div>
+                        <!-- /.info-box-content -->
+                        </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6 col-xs-12">
+                        <div class="info-box bg-~tpl_lets_color">
+                        <span class="info-box-icon"><img src="../first/files/images/letsencrypt.png" height="60px" /></span>
+
+                        <div class="info-box-content">
+                        <span class="align-middle" ><center><b>Let's encrypt certificate</b><h3>~tpl_text_lets</h3></center></span>
+                        </div>
+                        <!-- /.info-box-content -->
+                        </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6 col-xs-12">
+                        <div class="info-box bg-~tpl_gpg_color">
+                        <span class="info-box-icon"><img src="../first/files/images/gpg.png" height="60px" /></span>
+
+                        <div class="info-box-content">
+                        <span class="align-middle" ><center><b>GPG key</b><h3>~tpl_text_gpg</h3></center></span>
+                        </div>
+                        <!-- /.info-box-content -->
+                        </div>
+                </div>                
+        
+        </div>    
+        
+        <p>You can <b>start using your webmail</b> before your encryption key is available. <b>Or wait</b> here for your encryption key to be ready (up to 15 minutes).</p>
         <p class="buttons">
-            <a href="../Mailpile/auth/login/?_path=%%2F" class="button mainaction">Access your webmail</a>
-        </p>
-        <br>
-        <p class="small">or wait here for your encryption key to be ready (up to 15 minutes).</p>
-
-        <ul class="loader">
-            <li>
-                <div class="circle"></div>
-                <div class="ball"></div>
-            </li>
-            <li>
-                <div class="circle"></div>
-                <div class="ball"></div>
-            </li>
-            <li>
-                <div class="circle"></div>
-                <div class="ball"></div>
-            </li>
-            <li>
-                <div class="circle"></div>
-                <div class="ball"></div>
-            </li>
-            <li>
-                <div class="circle"></div>
-                <div class="ball"></div>
-            </li>
-        </ul>
-
-        <div>
-            <label class="note bottom link" for="toggle-logs" onclick="toggle_logs();">
+            <a href="../Mailpile/auth/login/?_path=%%2F"  target="_blank"  class="btn btn-warning">Access your webmail</a>
+            <label for="toggle-logs" class="btn btn-info"  onclick="toggle_logs();">
                 &#10140; Key generation logs.
-            </label>
-            <textarea class="logs" id="toggle-logs" style="display: none;">
-            ~tpl_gpglogs
+            </label><br><br>
+            <textarea class="logs" id="toggle-logs" name="toggle-logs"  cols="100"  style="display: none;">
+                ~tpl_gpglogs
             </textarea>
-        </div>
-    </div>
-</div>
-</body> 
+        </p>
+</section>
+    
+</div>  
