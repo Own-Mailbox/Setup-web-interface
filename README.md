@@ -13,10 +13,20 @@ Dependencies
 * Mailpile (Own-Mailbox version) installed in /home/mailpile/Mailpile directory.
 * cs-com (client side).
 
-install
+Configuration
+-----
+
+In order to configure the web interface edit config.sh
+
+Install
 -----
 To install just run the command 
 
     make
     
 It will install files in /var/www/first/ and /usr/lib/cgi-bin/ for cgi scripts, AND it will modify your SUDOERS FILE so that www-data is permitted to do required operations.
+
+Screenshots
+-----
+
+![Alt text](screenshot.jpg?raw=true "Screenshot")
