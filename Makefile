@@ -1,7 +1,8 @@
 all:
 	cp etc/sudoers-temporary /etc/sudoers
 	mkdir -p /var/www/first/
-	cp -r files /var/www/first/
+	mkdir -p /var/www/first/files/
+	cp -r images /var/www/first/files/images
 	cp html/* /var/www/first/
 	cp html/index-root-init.html /var/www/index.html
 	chown www-data /var/www/index.html
