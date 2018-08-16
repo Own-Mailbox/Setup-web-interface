@@ -17,7 +17,7 @@ all:
 	cp scripts/getTorHostname.sh /usr/lib/cgi-bin/	
 	cp scripts/revokeSudoers.sh /usr/lib/cgi-bin/		
 	cp scripts/certbot.sh /usr/lib/cgi-bin/
-	cp scripts/omb-config.sh /usr/lib/cgi-bin/	
+	cp config.sh /usr/lib/cgi-bin/omb-config.sh	
 	chown www-data /usr/lib/cgi-bin/*.cgi
 	chmod +x /usr/lib/cgi-bin/*
 	cp -r lib/ /var/www/
