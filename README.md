@@ -30,3 +30,8 @@ Screenshots
 -----
 
 ![Alt text](screenshot.jpg?raw=true "Screenshot")
+
+License
+-----
+
+The code is licensed under GPLv3. The Own-Mailbox name and logo are trademarks, and may not be used for commercial purposes without authorisation.
