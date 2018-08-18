@@ -2,6 +2,13 @@
 echo -e "Content-Type: text/html\n\n"
 echo -e ""
 
+. /usr/lib/cgi-bin/no-go-back.sh
+
+no_go_back_check 1
+if [ "$?" -ne "0" ]; then
+    exit
+fi
+
 #####################################################################
 #
 #               Generation du html   

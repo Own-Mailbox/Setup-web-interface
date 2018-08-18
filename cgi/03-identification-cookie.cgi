@@ -3,6 +3,12 @@ echo -e "Content-Type: text/html\n\n"
 echo -e ""
 
 . /usr/lib/cgi-bin/omb-config.sh
+. /usr/lib/cgi-bin/no-go-back.sh
+
+no_go_back_check 3
+if [ "$?" -ne "0" ]; then
+    exit
+fi
 
 #####################################################################
 #

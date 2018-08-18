@@ -1,8 +1,16 @@
 #!/bin/bash
 
-. /usr/lib/cgi-bin/omb-config.sh
-
 echo -e "Content-type: text/html\n\n"
+
+. /usr/lib/cgi-bin/omb-config.sh
+. /usr/lib/cgi-bin/no-go-back.sh
+
+no_go_back_check 6
+if [ "$?" -ne "0" ]; then
+    exit
+fi
+
+
 cat <<EOF
 <html lang="en">
 <head>

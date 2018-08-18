@@ -1,6 +1,12 @@
 #!/bin/bash
 echo -e "Content-Type: text/html\n\n"
 echo -e ""
+. /usr/lib/cgi-bin/no-go-back.sh
+
+no_go_back_check_set 7
+if [ "$?" -ne "0" ]; then
+    exit
+fi
 
 tpl_domain=$(cat /home/www-data/domain);
 tpl_hiddenservice=$(sudo /usr/lib/cgi-bin/getTorHostname.sh);

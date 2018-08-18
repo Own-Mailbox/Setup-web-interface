@@ -2,7 +2,12 @@
 
 echo -e "Content-Type: text/html\n\n"
 echo -e ""
+. /usr/lib/cgi-bin/no-go-back.sh
 
+no_go_back_check 8
+if [ "$?" -ne "0" ]; then
+    exit
+fi
                      
 tpl_domain=$(cat /home/www-data/domain);
 
