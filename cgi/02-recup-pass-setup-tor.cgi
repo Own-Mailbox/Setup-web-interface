@@ -29,7 +29,7 @@ if [ -e "/etc/omb/admin-pass-configured" ]; then
     tpl_time_refresh="5"
     tpl_title="Error"
     tpl_text="The root password was already set."
-    tpl_url_refresh="/cgi-bin/01-password-admin.cgi"
+    tpl_url_refresh="/cgi-bin/02-bis-check-tor.cgi"
     ok=1;
 fi
 
@@ -54,6 +54,8 @@ if [ "$length" -le "9" ]; then
     tpl_url_refresh="/cgi-bin/01-password-admin.cgi"
     ok=1;
 fi
+
+#TODO check that there is not special characters in the password
 
 if [ "$ok" -eq "0" ]; then
     (sudo /usr/lib/cgi-bin/changeRootPasswordOnce.sh "$pass1")& >&- 2>&-
