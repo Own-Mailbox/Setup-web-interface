@@ -3,155 +3,122 @@
 echo -e "Content-type: text/html\n\n"
 
 . /usr/lib/cgi-bin/no-go-back.sh
+. /usr/lib/cgi-bin/post.sh
 
 no_go_back_check 1
 if [ "$?" -ne "0" ]; then
     exit
 fi
 
-cat <<EOF
-<html lang="en">
-<head>
-EOF
-
-
-# (internal) routine to store POST data
-function cgi_get_POST_vars()
-{
-    # check content type
-    # FIXME: not sure if we could handle uploads with this..
-    [ "${CONTENT_TYPE}" != "application/x-www-form-urlencoded" ] && \
-        echo "bash.cgi warning: you should probably use MIME type "\
-             "application/x-www-form-urlencoded!" 1>&2
-    # save POST variables (only first time this is called)
-    [ -z "$QUERY_STRING_POST" \
-      -a "$REQUEST_METHOD" = "POST" -a ! -z "$CONTENT_LENGTH" ] && \
-        read -n $CONTENT_LENGTH QUERY_STRING_POST
-    # prevent shell execution
-    local t
-    t=${QUERY_STRING_POST//%60//} # %60 = `
-    t=${t//\`//}
-    t=${t//\$(//}
-    t=${t//%24%28//} # %24 = $, %28 = (
-    QUERY_STRING_POST=${t}
-    return
-}
-
-# (internal) routine to decode urlencoded strings
-function cgi_decodevar()
-{
-    [ $# -ne 1 ] && return
-    local v t h
-    # replace all + with whitespace and append %%
-    t="${1//+/ }%%"
-    while [ ${#t} -gt 0 -a "${t}" != "%" ]; do
-        v="${v}${t%%\%*}" # digest up to the first %
-        t="${t#*%}"       # remove digested part
-        # decode if there is anything to decode and if not at end of string
-        if [ ${#t} -gt 0 -a "${t}" != "%" ]; then
-            h=${t:0:2} # save first two chars
-            t="${t:2}" # remove these
-            v="${v}"`echo -e \\\\x${h}` # convert hex to special char
-        fi
-    done
-    # return decoded string
-    echo "${v}"
-    return
-}
-
-# routine to get variables from http requests
-# usage: cgi_getvars method varname1 [.. varnameN]
-# method is either GET or POST or BOTH
-# the magic varible name ALL gets everything
-function cgi_getvars()
-{
-    [ $# -lt 2 ] && return
-    local q p k v s
-    # prevent shell execution
-    t=${QUERY_STRING//%60//} # %60 = `
-    t=${t//\`//}
-    t=${t//\$(//}
-    t=${t//%24%28//} # %24 = $, %28 = (
-    QUERY_STRING=${t}
-    # get query
-    case $1 in
-        GET)
-            [ ! -z "${QUERY_STRING}" ] && q="${QUERY_STRING}&"
-            ;;
-        POST)
-            cgi_get_POST_vars
-            [ ! -z "${QUERY_STRING_POST}" ] && q="${QUERY_STRING_POST}&"
-            ;;
-        BOTH)
-            [ ! -z "${QUERY_STRING}" ] && q="${QUERY_STRING}&"
-            cgi_get_POST_vars
-            [ ! -z "${QUERY_STRING_POST}" ] && q="${q}${QUERY_STRING_POST}&"
-            ;;
-    esac
-    shift
-    s=" $* "
-    # parse the query data
-    while [ ! -z "$q" ]; do
-        p="${q%%&*}"  # get first part of query string
-        k="${p%%=*}"  # get the key (variable name) from it
-        v="${p#*=}"   # get the value from it
-        q="${q#$p&*}" # strip first part from query string
-        # decode and evaluate var if requested
-        [ "$1" = "ALL" -o "${s/ $k /}" != "$s" ] && \
-            eval "$k=\"`cgi_decodevar \"$v\"`\""
-    done
-    return
-}
-
-
 
 # register all GET and POST variables
 cgi_getvars BOTH ALL
 
+tpl_result="success"
+tpl_title="Setting administration password" 
+tpl_text="The administration password was set!" 
+tpl_time_refresh="0"
+tpl_icon="fa-check"
+tpl_url_refresh="/cgi-bin/02-bis-check-tor.cgi"
+ok=0;
 
 #TODO check for pass integrity
 if [ -e "/etc/omb/admin-pass-configured" ]; then
-cat <<EOF
-<meta http-equiv="refresh" content="0; url=../first/01c-password-already-set.html">
-</head><body></body>
-</html>
-EOF
-exit 0;
+    tpl_icon="fa-times"
+    tpl_result="error"
+    tpl_time_refresh="5"
+    tpl_title="Error"
+    tpl_text="The root password was already set."
+    tpl_url_refresh="/cgi-bin/01-password-admin.cgi"
+    ok=1;
 fi
 
 #Password did not match
 if [ "$pass1" != "$pass2" ]; then
-cat <<EOF
-<meta http-equiv="refresh" content="0; url=../first/01b-password-no-match.html">
-</head><body></body>
-</html>
-EOF
-exit 0;
+    tpl_icon="fa-times"
+    tpl_result="error"
+    tpl_time_refresh="5"
+    tpl_title="Error"
+    tpl_text="Passwords did not match."
+    tpl_url_refresh="/cgi-bin/01-password-admin.cgi"
+    ok=1;
 fi
 
-
-(sudo /usr/lib/cgi-bin/changeRootPasswordOnce.sh "$pass1")& >&- 2>&-
-if [ "$?" -eq 11 ]; then 
-cat <<EOF
-<meta http-equiv="refresh" content="0; url=../first/01c-password-already-set.html">
-</head><body></body>
-</html>
-EOF
+length=${#pass1}
+if [ "$length" -le "9" ]; then
+    tpl_icon="fa-times"
+    tpl_result="error"
+    tpl_time_refresh="5"
+    tpl_title="Error"
+    tpl_text="Passwords too short, must be at least 10 characters."
+    tpl_url_refresh="/cgi-bin/01-password-admin.cgi"
+    ok=1;
 fi
 
-(sudo /usr/lib/cgi-bin/setup-tor.sh)& >&- 2>&-
+if [ "$ok" -eq "0" ]; then
+    (sudo /usr/lib/cgi-bin/changeRootPasswordOnce.sh "$pass1")& >&- 2>&-
+    if [ "$?" -eq 11 ]; then
+        tpl_icon="fa-times"
+        tpl_result="error"
+        tpl_time_refresh="5"
+        tpl_title="Error"
+        tpl_text="Could not set the administration password."
+        tpl_url_refresh="/cgi-bin/01-password-admin.cgi"
+        ok=1;
+    fi
+fi
+
+if [ "$ok" -eq "0" ]; then
+    #Setup tor hidden service
+    (sudo /usr/lib/cgi-bin/setup-tor.sh)& >&- 2>&-
+
+    #  Generate self-signed1 ssl key and add https to apache
+    (sudo /usr/lib/cgi-bin/make-tls-key.sh) >&- 2>&-
+fi
+
+#####################################################################
+#
+#               Generation du html   
+#
+#####################################################################
+inject_var() {
+	echo $1 | sed -e "s#$2#$3#g"
+}
 
 ########################################################
-#  Generate self-signed1 ssl key and add https to apache
+#			Header
 ########################################################
-(sudo /usr/lib/cgi-bin/make-tls-key.sh) >&- 2>&-
+page=$(cat /var/www/first/header.html)
+page=$( inject_var "$page" ~tpl_active_welcome "")
+page=$( inject_var "$page" ~tpl_active_password "")
+page=$( inject_var "$page" ~tpl_active_connectivity "active")
+page=$( inject_var "$page" ~tpl_active_identification_link "")
+page=$( inject_var "$page" ~tpl_active_domain "")
+page=$( inject_var "$page" ~tpl_active_summary "")
+page=$( inject_var "$page" ~tpl_active_email_account "")
+page=$( inject_var "$page" ~tpl_active_keys "")
+page=$( inject_var "$page" ~tpl_active_done "")
+echo $page;
 
+########################################################
+#			page
+########################################################
+page=$(cat /var/www/first/recup.html)
+page=$( inject_var "$page" ~tpl_result "$tpl_result")
+page=$( inject_var "$page" ~tpl_title "$tpl_title")
+page=$( inject_var "$page" ~tpl_text "$tpl_text")
+page=$( inject_var "$page" ~tpl_url_refresh "$tpl_url_refresh")
+page=$( inject_var "$page" ~tpl_time_refresh "$tpl_time_refresh")
+page=$( inject_var "$page" ~tpl_icon "$tpl_icon")
+echo $page;
 
-cat <<EOF
-<meta http-equiv="refresh" content="0; url=02-bis-check-tor.cgi">
-</head><body></body>
-</html>
-EOF
+########################################################
+#			Footer
+########################################################
+page=$(cat /var/www/first/footer.html)
+echo $page;
+ 
+
 exec >&-
 exec 2>&-
 exit 0;
