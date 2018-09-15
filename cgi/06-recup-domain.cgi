@@ -11,6 +11,9 @@ if [ "$?" -ne "0" ]; then
     exit
 fi
 
+# register all POST variables
+cgi_getvars POST ALL
+
 tpl_result="success"
 tpl_title="Choosing domain" 
 tpl_text="Domain was set!" 
@@ -30,6 +33,38 @@ if [ -e "/etc/omb/Domain-configured" ]; then
     ok=1;
 fi
 
+echo "$domain" | egrep -q "^[a-z0-9]*$"
+if [ "$?" -ne "0" ]; then
+    tpl_icon="fa-times"
+    tpl_result="error"
+    tpl_time_refresh="5"
+    tpl_title="Error"
+    tpl_text="Subdomain must contain only alpha-numeric lower-case characters."
+    tpl_url_refresh="/cgi-bin/05-choose-domain.cgi"
+    ok=1;
+fi
+
+length=${#domain}
+if [ "$length" -le "3" ]&& [ "$ok" -eq "0" ]; then
+    tpl_icon="fa-times"
+    tpl_result="error"
+    tpl_time_refresh="5"
+    tpl_title="Error"
+    tpl_text="Subdomain must contain at least 3 characters."
+    tpl_url_refresh="/cgi-bin/05-choose-domain.cgi"
+    ok=1;
+fi
+
+length=${#domain}
+if [ "$length" -gt "32" ]&& [ "$ok" -eq "0" ]; then
+    tpl_icon="fa-times"
+    tpl_result="error"
+    tpl_time_refresh="5"
+    tpl_title="Error"
+    tpl_text="Subdomain must contain at most 32 characters."
+    tpl_url_refresh="/cgi-bin/05-choose-domain.cgi"
+    ok=1;
+fi
 
 #Get our tor hidden service hostname
 tor_hiddendomain=$(sudo /usr/lib/cgi-bin/getTorHostname.sh)
@@ -64,8 +99,6 @@ fi
 
 
 if [ "$ok" -eq "0" ]; then
-# register all POST variables
-cgi_getvars POST ALL
 omb-client -c /home/www-data/cookie -d $domain > /tmp/res1 2>&1
 head -n 1 /tmp/res1 > /tmp/res
 res=$(cat /tmp/res);
