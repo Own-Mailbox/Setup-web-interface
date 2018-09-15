@@ -26,7 +26,19 @@ ok=0;
 
 password_safe=$(echo "$pass1" | sed -e "s/[!@#\$%^&~*()\"\\\'\(\)\;\/\`\:\<\>]//g")
 
-if [ "$password_safe" != "$pass1" ]; then
+#TODO check for pass integrity
+if [ -e "/etc/omb/admin-pass-configured" ]; then
+    tpl_icon="fa-times"
+    tpl_result="error"
+    tpl_time_refresh="5"
+    tpl_title="Error"
+    tpl_text="The root password was already set."
+    tpl_url_refresh="/cgi-bin/02-bis-check-tor.cgi"
+    ok=1;
+fi
+
+
+if [ "$password_safe" != "$pass1" ]&& [ "$ok" -eq "0" ];  then
     tpl_icon="fa-times"
     tpl_result="error"
     tpl_time_refresh="5"

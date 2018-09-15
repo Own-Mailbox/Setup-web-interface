@@ -3,6 +3,7 @@
 echo -e "Content-type: text/html\n\n"
 . /usr/lib/cgi-bin/no-go-back.sh
 . /usr/lib/cgi-bin/post.sh
+. /usr/lib/cgi-bin/omb-config.sh
 
 no_go_back_check 4
 if [ "$?" -ne "0" ]; then
@@ -20,17 +21,27 @@ tpl_icon="fa-check"
 tpl_url_refresh="/cgi-bin/05-choose-domain.cgi"
 ok=0;
 
-if [ -e "/etc/omb/Identification-configured" ]; then
+echo "$link" | egrep -q "^https:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)"
+if [ "$?" -ne "0" ]; then
     tpl_icon="fa-times"
     tpl_result="error"
     tpl_time_refresh="5"
     tpl_title="Error"
-    tpl_text="The identification link was already set."
-    tpl_url_refresh="/cgi-bin/05-choose-domain.cgi"
+    tpl_text="The identification is not a correct https URL."
+    tpl_url_refresh="/cgi-bin/03-identification-cookie.cgi"
     ok=1;
 fi
 
-#todo check link is an URL 
+echo "$link" | grep "https://$FQDN" >/dev/null 2>&1
+if [ "$?" -ne "0" ]&& [ "$ok" -eq "0" ]; then
+    tpl_icon="fa-times"
+    tpl_result="error"
+    tpl_time_refresh="5"
+    tpl_title="Error"
+    tpl_text="The given identification does not correspond to the correct proxy server."
+    tpl_url_refresh="/cgi-bin/03-identification-cookie.cgi"
+    ok=1;
+fi
 
 if [ "$ok" -eq "0" ]; then
     echo $link>/tmp/link
@@ -44,8 +55,6 @@ if [ "$ok" -eq "0" ]; then
         tpl_text="The identification link could not be downloaded."
         tpl_url_refresh="/cgi-bin/03-identification-cookie.cgi"
         ok=1;
-    else
-        /usr/bin/touch /etc/omb/Identification-configured
     fi
 fi
 
