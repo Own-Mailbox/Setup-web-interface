@@ -19,8 +19,8 @@ tpl_url_refresh="/cgi-bin/10-final.cgi"
 ok=0;
 
 
-# register all GET and POST variables
-cgi_getvars BOTH ALL
+# register all POST variables
+cgi_getvars POST ALL
 
 #si Mail est déja configuré on va direct au résumé
 if [ -e "/etc/omb/Mailpile-configured" ]; then

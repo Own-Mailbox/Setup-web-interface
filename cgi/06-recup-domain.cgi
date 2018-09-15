@@ -64,7 +64,8 @@ fi
 
 
 if [ "$ok" -eq "0" ]; then
-cgi_getvars BOTH ALL
+# register all POST variables
+cgi_getvars POST ALL
 omb-client -c /home/www-data/cookie -d $domain > /tmp/res1 2>&1
 head -n 1 /tmp/res1 > /tmp/res
 res=$(cat /tmp/res);

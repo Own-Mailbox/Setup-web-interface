@@ -1,24 +1,35 @@
-#!/bin/sh
-
 # (internal) routine to store POST data
 function cgi_get_POST_vars()
 {
+    # only handle POST requests here
+    [ "$REQUEST_METHOD" != "POST" ] && return
+
+    # save POST variables (only first time this is called)
+    [ ! -z "$QUERY_STRING_POST" ] && return
+
+    # skip empty content
+    [ -z "$CONTENT_LENGTH" ] && return
+
     # check content type
     # FIXME: not sure if we could handle uploads with this..
     [ "${CONTENT_TYPE}" != "application/x-www-form-urlencoded" ] && \
         echo "bash.cgi warning: you should probably use MIME type "\
              "application/x-www-form-urlencoded!" 1>&2
-    # save POST variables (only first time this is called)
-    [ -z "$QUERY_STRING_POST" \
-      -a "$REQUEST_METHOD" = "POST" -a ! -z "$CONTENT_LENGTH" ] && \
-        read -n $CONTENT_LENGTH QUERY_STRING_POST
-    # prevent shell execution
-    local t
-    t=${QUERY_STRING_POST//%60//} # %60 = `
-    t=${t//\`//}
-    t=${t//\$(//}
-    t=${t//%24%28//} # %24 = $, %28 = (
-    QUERY_STRING_POST=${t}
+
+    # convert multipart to urlencoded
+    local handlemultipart=0 # enable to handle multipart/form-data (dangerous?)
+    if [ "$handlemultipart" = "1" -a "${CONTENT_TYPE:0:19}" = "multipart/form-data" ]; then
+        boundary=${CONTENT_TYPE:30}
+        read -N $CONTENT_LENGTH RECEIVED_POST
+        # FIXME: don't use awk, handle binary data (Content-Type: application/octet-stream)
+        QUERY_STRING_POST=$(echo "$RECEIVED_POST" | awk -v b=$boundary 'BEGIN { RS=b"\r\n"; FS="\r\n"; ORS="&" }
+           $1 ~ /^Content-Disposition/ {gsub(/Content-Disposition: form-data; name=/, "", $1); gsub("\"", "", $1); print $1"="$3 }')
+
+    # take input string as is
+    else
+        read -N $CONTENT_LENGTH QUERY_STRING_POST
+    fi
+
     return
 }
 
@@ -52,12 +63,6 @@ function cgi_getvars()
 {
     [ $# -lt 2 ] && return
     local q p k v s
-    # prevent shell execution
-    t=${QUERY_STRING//%60//} # %60 = `
-    t=${t//\`//}
-    t=${t//\$(//}
-    t=${t//%24%28//} # %24 = $, %28 = (
-    QUERY_STRING=${t}
     # get query
     case $1 in
         GET)
@@ -81,10 +86,9 @@ function cgi_getvars()
         k="${p%%=*}"  # get the key (variable name) from it
         v="${p#*=}"   # get the value from it
         q="${q#$p&*}" # strip first part from query string
-        # decode and evaluate var if requested
+        # decode and assign variable if requested
         [ "$1" = "ALL" -o "${s/ $k /}" != "$s" ] && \
-            eval "$k=\"`cgi_decodevar \"$v\"`\""
+            export "$k"="`cgi_decodevar \"$v\"`"
     done
     return
 }
-

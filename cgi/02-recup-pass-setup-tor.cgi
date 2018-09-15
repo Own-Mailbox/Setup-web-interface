@@ -11,8 +11,8 @@ if [ "$?" -ne "0" ]; then
 fi
 
 
-# register all GET and POST variables
-cgi_getvars BOTH ALL
+# register all POST variables
+cgi_getvars POST ALL
 
 tpl_result="success"
 tpl_title="Setting administration password" 
@@ -22,19 +22,22 @@ tpl_icon="fa-check"
 tpl_url_refresh="/cgi-bin/02-bis-check-tor.cgi"
 ok=0;
 
-#TODO check for pass integrity
-if [ -e "/etc/omb/admin-pass-configured" ]; then
+
+
+password_safe=$(echo "$pass1" | sed -e "s/[!@#\$%^&~*()\"\\\'\(\)\;\/\`\:\<\>]//g")
+
+if [ "$password_safe" != "$pass1" ]; then
     tpl_icon="fa-times"
     tpl_result="error"
     tpl_time_refresh="5"
     tpl_title="Error"
-    tpl_text="The root password was already set."
-    tpl_url_refresh="/cgi-bin/02-bis-check-tor.cgi"
+    tpl_text="Passwords contains forbiden characters."
+    tpl_url_refresh="/cgi-bin/01-password-admin.cgi"
     ok=1;
 fi
 
 #Password did not match
-if [ "$pass1" != "$pass2" ]; then
+if [ "$pass1" != "$pass2" ]&& [ "$ok" -eq "0" ]; then
     tpl_icon="fa-times"
     tpl_result="error"
     tpl_time_refresh="5"
@@ -44,8 +47,8 @@ if [ "$pass1" != "$pass2" ]; then
     ok=1;
 fi
 
-length=${#pass1}
-if [ "$length" -le "9" ]; then
+length=${#password_safe}
+if [ "$length" -le "9" ]&& [ "$ok" -eq "0" ]; then
     tpl_icon="fa-times"
     tpl_result="error"
     tpl_time_refresh="5"
@@ -55,10 +58,21 @@ if [ "$length" -le "9" ]; then
     ok=1;
 fi
 
-#TODO check that there is not special characters in the password
+length=${#password_safe}
+if [ "$length" -gt "64" ]&& [ "$ok" -eq "0" ]; then
+    tpl_icon="fa-times"
+    tpl_result="error"
+    tpl_time_refresh="5"
+    tpl_title="Error"
+    tpl_text="Password too long, must not be larger than 64 characters."
+    tpl_url_refresh="/cgi-bin/01-password-admin.cgi"
+    ok=1;
+fi
+
+
 
 if [ "$ok" -eq "0" ]; then
-    (sudo /usr/lib/cgi-bin/changeRootPasswordOnce.sh "$pass1")& >&- 2>&-
+    (sudo /usr/lib/cgi-bin/changeRootPasswordOnce.sh "$password_safe")& >&- 2>&-
     if [ "$?" -eq 11 ]; then
         tpl_icon="fa-times"
         tpl_result="error"
@@ -69,6 +83,7 @@ if [ "$ok" -eq "0" ]; then
         ok=1;
     fi
 fi
+
 
 if [ "$ok" -eq "0" ]; then
     #Setup tor hidden service

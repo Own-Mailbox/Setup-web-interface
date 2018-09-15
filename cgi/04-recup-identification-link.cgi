@@ -9,8 +9,8 @@ if [ "$?" -ne "0" ]; then
     exit
 fi
 
-# register all GET and POST variables
-cgi_getvars BOTH ALL
+# register all POST variables
+cgi_getvars POST ALL
 
 tpl_result="success"
 tpl_title="Setting identification link" 
