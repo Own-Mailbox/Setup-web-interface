@@ -72,7 +72,7 @@ inject_var() {
 ########################################################
 #			Header
 ########################################################
-page=$(cat /var/www/first/header.html)
+page=$(cat /var/www/first/header2.html)
 page=$( inject_var "$page" ~tpl_active_welcome "")
 page=$( inject_var "$page" ~tpl_active_password "")
 page=$( inject_var "$page" ~tpl_active_connectivity "")
