@@ -55,7 +55,11 @@ else
     
     #Si toutes les phase de connection se sont bien passées.
      if [ "$res_wget" -eq "0" ] && [ "$res_cat" -eq "0" ] && [ "$hostname" != "" ] && [ "$local_ok" = "OK" ]; then
-         tpl_redirect="4; url=03-identification-cookie.cgi"
+        if [ -f "/home/www-data/cookie" ]; then 
+            tpl_redirect="4; url=05-choose-domain.cgi"
+        else
+            tpl_redirect="4; url=03-identification-cookie.cgi"
+        fi
      else
          tpl_redirect="1";
      fi
