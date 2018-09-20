@@ -33,9 +33,41 @@ if [ -e "/etc/omb/Mailpile-configured" ]; then
         ok=1;
 fi
 
+password_safe=$(echo "$pass1" | sed -e "s/[!@#\$%^&~*()\"\\\'\(\)\;\/\`\:\<\>]//g")
+if [ "$password_safe" != "$pass1" ]&& [ "$ok" -eq "0" ];  then
+    tpl_icon="fa-times"
+    tpl_result="error"
+    tpl_time_refresh="5"
+    tpl_title="Error"
+    tpl_text="Passwords contains forbiden characters."
+    tpl_url_refresh="/cgi-bin/08-setup-email-acount.cgi"
+    ok=1;
+fi
+
+fn_safe=$(echo "$fn" | sed -e "s/[!@#\$%^&~*()\"\\\'\(\)\;\/\`\:\<\>]//g")
+if [ "$fn_safe" != "$fn" ]&& [ "$ok" -eq "0" ];  then
+    tpl_icon="fa-times"
+    tpl_result="error"
+    tpl_time_refresh="5"
+    tpl_title="Error"
+    tpl_text="Full name contains forbiden characters."
+    tpl_url_refresh="/cgi-bin/08-setup-email-acount.cgi"
+    ok=1;
+fi
+
+user_safe=$(echo "$user" | sed -e "s/[!@#\$%^&~*()\"\\\'\(\)\;\/\`\:\<\>]//g")
+if [ "$user_safe" != "$user" ]&& [ "$ok" -eq "0" ];  then
+    tpl_icon="fa-times"
+    tpl_result="error"
+    tpl_time_refresh="5"
+    tpl_title="Error"
+    tpl_text="User contains forbiden characters."
+    tpl_url_refresh="/cgi-bin/08-setup-email-acount.cgi"
+    ok=1;
+fi
 
 #Password did not match
-if [ "$pass1" != "$pass2" ]; then
+if [ "$pass1" != "$pass2" ]&& [ "$ok" -eq "0" ]; then
         tpl_icon="fa-times"
         tpl_result="error"
         tpl_time_refresh="5"
@@ -45,8 +77,27 @@ if [ "$pass1" != "$pass2" ]; then
         ok=1;
 fi
 
-#TODO check password length
-#TODO check special chars.
+length=${#password_safe}
+if [ "$length" -le "9" ]&& [ "$ok" -eq "0" ]; then
+    tpl_icon="fa-times"
+    tpl_result="error"
+    tpl_time_refresh="5"
+    tpl_title="Error"
+    tpl_text="Passwords too short, must be at least 10 characters."
+    tpl_url_refresh="/cgi-bin/08-setup-email-acount.cgi"
+    ok=1;
+fi
+
+length=${#password_safe}
+if [ "$length" -gt "64" ]&& [ "$ok" -eq "0" ]; then
+    tpl_icon="fa-times"
+    tpl_result="error"
+    tpl_time_refresh="5"
+    tpl_title="Error"
+    tpl_text="Password too long, must not be larger than 64 characters."
+    tpl_url_refresh="/cgi-bin/08-setup-email-acount.cgi"
+    ok=1;
+fi
 
 if [ "$user" = "" ]|| [ "$fn" = "" ]|| [ "$pass1" = "" ] ; then
         tpl_icon="fa-times"
@@ -66,7 +117,7 @@ echo "$user@$domain">/home/www-data/mail
 echo "$fn">/home/www-data/fn
 unset HISTFILE
 
-sudo /usr/lib/cgi-bin/configPostfixMailpileGPG.sh "$user" "$domain" "$pass1" "$fn"  >/dev/null 2>&1
+sudo /usr/lib/cgi-bin/configPostfixMailpileGPG.sh "$user_safe" "$domain" "$password_safe" "$fn_safe"  >/dev/null 2>&1
 
 unset HISTFILE
 #For security reasons
