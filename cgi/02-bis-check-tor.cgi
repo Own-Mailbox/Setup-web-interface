@@ -65,7 +65,7 @@ else
      fi
 fi
 
-tpl_torlog=$(cat /var/log/tor.log)
+tpl_torlog=$(cat /var/log/tor.log | sed -e "s/#//g")
 tpl_torlog=${tpl_torlog//$'\n'/\\\&\\\#010;}
 
 #####################################################################
