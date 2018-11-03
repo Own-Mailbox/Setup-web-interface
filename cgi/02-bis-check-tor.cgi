@@ -26,7 +26,7 @@ else
     echo "$attempt"> /tmp/attempt_www
 
     #check that we can reach the proxy server
-    torsocks wget --timeout $((attempt)) http://$FQDN/OK -O /tmp/ok_www > /dev/null 2>&1
+    torsocks wget -t 1 --timeout $((attempt)) http://$FQDN/OK -O /tmp/ok_www > /dev/null 2>&1
     res_wget=$?;
 
     #Get hostname
@@ -34,7 +34,7 @@ else
     res_cat=$?;
 
     #Trying to reach ourselves just to make sure that our tor hidden service is accessible.
-    torsocks wget --timeout=$((attempt)) http://$hostname/OK -O /tmp/wget-ok-init >/tmp/wget-tor-init-res 2>&1
+    torsocks wget -t 1 --timeout=$((attempt)) http://$hostname/OK -O /tmp/wget-ok-init >/tmp/wget-tor-init-res 2>&1
     local_ok=$(cat /tmp/wget-ok-init)
 
     if [ "$res_wget" -eq "0" ]; then
