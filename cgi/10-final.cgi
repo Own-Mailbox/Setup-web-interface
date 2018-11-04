@@ -9,7 +9,7 @@ if [ "$?" -ne "0" ]; then
     exit
 fi
 
-ps -ae | grep gpg > /dev/null 2>&1
+ps -ae | grep gpg | grep -v gpg-agent > /dev/null 2>&1
 gpgstate=$?;
 
 certbot=$(cat /tmp/certbot-res)
