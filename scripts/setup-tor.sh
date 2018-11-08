@@ -9,7 +9,12 @@ HiddenServicePort 25 127.0.0.1:25\n"
 
 printf "$text" >> /etc/tor/torrc;
 
-killall tor;
+pid=$(/tmp/tor-hidden-service-pid)
+if [ "$pid" = "" ]; then
+    killall tor
+else
+    kill -9 $pid;
+fi
 
 #Read 32 Bytes of entropy just to make sure /dev/urandom is correctly reseeded
 #See https://lists.torproject.org/pipermail/tor-talk/2014-January/031773.html
