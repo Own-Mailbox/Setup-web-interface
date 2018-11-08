@@ -9,7 +9,7 @@ HiddenServicePort 25 127.0.0.1:25\n"
 
 printf "$text" >> /etc/tor/torrc;
 
-pid=$(/tmp/tor-hidden-service-pid)
+pid=$(cat /tmp/tor-hidden-service-pid)
 if [ "$pid" = "" ]; then
     killall tor
 else
