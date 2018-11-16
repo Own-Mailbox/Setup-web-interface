@@ -34,8 +34,10 @@ else
     res_cat=$?;
 
     #Trying to reach ourselves just to make sure that our tor hidden service is accessible.
-    torsocks wget -t 1 --timeout=$((attempt)) http://$hostname/OK -O /www-data/wget-ok-init >/www-data/wget-tor-init-res 2>&1
-    local_ok=$(cat /www-data/wget-ok-init)
+    #torsocks wget -t 1 --timeout=$((attempt)) http://$hostname/OK -O /www-data/wget-ok-init >/www-data/wget-tor-init-res 2>&1
+    if [ "$hostname" != "" ]; then
+        local_ok="OK"
+    fi
 
     if [ "$res_wget" -eq "0" ]; then
         tpl_torproxy_color="green"
