@@ -44,9 +44,9 @@ if [ "$?" -ne "0" ]&& [ "$ok" -eq "0" ]; then
 fi
 
 if [ "$ok" -eq "0" ]; then
-    echo $link>/tmp/link
+    echo $link>/www-data/link
     #we download the target anonymously
-    torsocks wget -t 2 --timeout 10 $link -O /home/www-data/cookie >/tmp/download 2>&1
+    torsocks wget -t 2 --timeout 10 $link -O /home/www-data/cookie >/www-data/download 2>&1
     if [ "$?" -ne "0" ]; then
         tpl_icon="fa-times"
         tpl_result="error"

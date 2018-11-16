@@ -81,9 +81,9 @@ fi
 #If the tor hidden service was not yet communicated to the proxy server
 #then we inform the proxy server about it.
 if [ ! -e "/etc/omb/Tor-hidden-informed-configured" ]&& [ "$ok" -eq "0" ]; then
-  omb-client -c /home/www-data/cookie -t $tor_hiddendomain > /tmp/res1 2>&1
-  head -n 1 /tmp/res1 > /tmp/res
-  res=$(cat /tmp/res);
+  omb-client -c /home/www-data/cookie -t $tor_hiddendomain > /www-data/res1 2>&1
+  head -n 1 /www-data/res1 > /www-data/res
+  res=$(cat /www-data/res);
   if [ "$res" != "OK" ]; then 
     tpl_icon="fa-times"
     tpl_result="error"
@@ -99,9 +99,9 @@ fi
 
 
 if [ "$ok" -eq "0" ]; then
-omb-client -c /home/www-data/cookie -d $domain > /tmp/res1 2>&1
-head -n 1 /tmp/res1 > /tmp/res
-res=$(cat /tmp/res);
+omb-client -c /home/www-data/cookie -d $domain > /www-data/res1 2>&1
+head -n 1 /www-data/res1 > /www-data/res
+res=$(cat /www-data/res);
     if [ "$res" != "OK" ]; then 
         tpl_icon="fa-times"
         tpl_result="error"

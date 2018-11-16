@@ -26,4 +26,6 @@ all:
 	cp -r lib/ /var/www/
 	touch /etc/setup-step
 	chown www-data /etc/setup-step
+	mkdir /www-data/
+	chown www-data /www-data/
 

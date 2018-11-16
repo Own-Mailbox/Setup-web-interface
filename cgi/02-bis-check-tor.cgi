@@ -12,10 +12,10 @@ if [ "$?" -ne "0" ]; then
 fi
 
 
-attempt=$(cat /tmp/attempt_www)
+attempt=$(cat /www-data/attempt_www)
 if [ "$attempt" = "" ]; then
     attempt="1";
-    echo "$attempt"> /tmp/attempt_www
+    echo "$attempt"> /www-data/attempt_www
     tpl_redirect="0";
     tpl_hidden_color="orange" 
     tpl_torproxy_color="orange"  
@@ -23,10 +23,10 @@ if [ "$attempt" = "" ]; then
     tpl_text_hidden="Not yet"        
 else
     attempt=$((attempt+1))
-    echo "$attempt"> /tmp/attempt_www
+    echo "$attempt"> /www-data/attempt_www
 
     #check that we can reach the proxy server
-    torsocks wget -t 1 --timeout $((attempt)) http://$FQDN/OK -O /tmp/ok_www > /dev/null 2>&1
+    torsocks wget -t 1 --timeout $((attempt)) http://$FQDN/OK -O /www-data/ok_www > /dev/null 2>&1
     res_wget=$?;
 
     #Get hostname
@@ -34,8 +34,8 @@ else
     res_cat=$?;
 
     #Trying to reach ourselves just to make sure that our tor hidden service is accessible.
-    torsocks wget -t 1 --timeout=$((attempt)) http://$hostname/OK -O /tmp/wget-ok-init >/tmp/wget-tor-init-res 2>&1
-    local_ok=$(cat /tmp/wget-ok-init)
+    torsocks wget -t 1 --timeout=$((attempt)) http://$hostname/OK -O /www-data/wget-ok-init >/www-data/wget-tor-init-res 2>&1
+    local_ok=$(cat /www-data/wget-ok-init)
 
     if [ "$res_wget" -eq "0" ]; then
         tpl_torproxy_color="green"
